@@ -156,7 +156,7 @@ namespace RomanNumerals
             int x;
             x = NumeralsToInt(ResultBoxOne.Text);
             //ResultBoxOne.Text = IntToNumerals(x);
-            ResultBoxOne.Text = IntToNumerals(999);
+            ResultBoxOne.Text = IntToNumerals(234);
         }
 
         private void ResvereTest(object sender, EventArgs e)
