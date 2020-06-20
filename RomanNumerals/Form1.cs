@@ -12,7 +12,7 @@ namespace RomanNumerals
 {
     public partial class Form1 : Form
     {
-        Dictionary<string, int> roman_numerals = new Dictionary<string, int>()
+        readonly Dictionary<string, int> roman_numerals = new Dictionary<string, int>()
         {
             {"I",1},
             {"V",5},
@@ -22,6 +22,10 @@ namespace RomanNumerals
             {"D",500},
             {"M",1000}
         };
+        int first_num;
+        int second_num;
+        string operation = "";
+        bool operarator_pressed = false;
         
         
         
@@ -32,9 +36,15 @@ namespace RomanNumerals
 
         private void NumeralClick(object sender, EventArgs e)
         {
+            if (operarator_pressed == true)
+            {
+                ResultBoxTwo.Text = ResultBoxOne.Text;
+                ResultBoxOne.Clear();
+            }
             Button bnum = (Button)sender;
 
             ResultBoxOne.Text = ResultBoxOne.Text + bnum.Text;
+            operarator_pressed = false;
         }
 
         public int NumeralsToInt(string numerals)
@@ -67,13 +77,17 @@ namespace RomanNumerals
             }
             
 
-            return 1;
+            
 
          }
 
         public string IntToNumerals(int number)
         {
             string x = "";
+            if(number == 0)
+            {
+                return "NULLA"; 
+            }
             
             while (number != 0)
             {
@@ -142,7 +156,7 @@ namespace RomanNumerals
                 {
                     number -= 1;
                     x += "I";
-                    ResultBoxOne.Text = "help";
+                    
                 }
                 
 
@@ -151,20 +165,111 @@ namespace RomanNumerals
             return x;
         }
 
-        private void ConvertNumeralsToInt(object sender, EventArgs e)
+      
+
+        private void OperatorClick(object sender, EventArgs e)
         {
-            int x;
-            x = NumeralsToInt(ResultBoxOne.Text);
-            //ResultBoxOne.Text = IntToNumerals(x);
-            ResultBoxOne.Text = IntToNumerals(234);
+
+            if (operarator_pressed == false)
+            {
+                first_num = NumeralsToInt(ResultBoxOne.Text);
+
+                Button bnum = (Button)sender;
+                ResultBoxOne.Text = ResultBoxOne.Text + bnum.Text;
+
+                operation = bnum.Text;
+                operarator_pressed = true;
+            }
+            else
+            {
+                ResultBoxOne.Text = "consilio inito error";
+            }
+            
+            
+
         }
 
-        private void ResvereTest(object sender, EventArgs e)
+        private void SolveClick(object sender, EventArgs e)
         {
-            string y;
-            int x = Int32.Parse(ResultBoxOne.Text);
-            y = IntToNumerals(x);
-            ResultBoxOne.Text = y;
+            second_num = NumeralsToInt(ResultBoxOne.Text);
+            int result;
+
+            switch (operation)
+            {
+                case "+":
+                    result = first_num + second_num;
+                    ResultBoxOne.Text = IntToNumerals(result);
+                    break;
+
+                case "-":
+                    if ((first_num - second_num) < 0)
+                    {
+                        ResultBoxOne.Text = "There are no negative numbers in Rome!";
+                        break;
+                    }
+                    else
+                    {
+                        result = first_num - second_num;
+                        ResultBoxOne.Text = IntToNumerals(result);
+                        break;
+                    }
+                case "*":
+                    result = first_num * second_num;
+                    ResultBoxOne.Text = IntToNumerals(result);
+                    break;
+                case "/":
+                    if(first_num % second_num != 0)
+                    {
+                        ResultBoxOne.Text = "There are no decimals in Rome!";
+                        break;
+                    }
+                    else
+                    {
+                        result = first_num / second_num;
+                        ResultBoxOne.Text = IntToNumerals(result);
+                        break;
+                    }
+
+
+            }
+            operarator_pressed = false;
+            second_num = first_num;
+            ResultBoxTwo.Clear();
+            
+            
         }
+
+        private void ClearClick(object sender, EventArgs e)
+        {
+            first_num = 0;
+            second_num = 0;
+            ResultBoxOne.Clear();
+            ResultBoxTwo.Clear();
+            operarator_pressed = false;
+            
+        }
+
+        private void ClearEntryClick(object sender, EventArgs e)
+        {
+            ResultBoxOne.Clear();
+            operarator_pressed = false;
+        }
+
+        public bool NumberCheck(String check)
+        {
+            int test;
+            try
+            {
+                test = Int16.Parse(check);
+            }
+
+            catch (System.FormatException)
+            {
+                return false;
+
+            }
+            return true;
+
+        } 
     }
 }
